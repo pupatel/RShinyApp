@@ -111,27 +111,7 @@ server<- function(input,output, session){
       })
     })
     
-    # neural network action button called nn
-    observeEvent(input$nn, {
-      require(neuralnet)
-      trainset$yes = trainset$class == "yes"
-      trainset$no = trainset$class == "no"
 
-      # train the neuralnet
-      nn <-neuralnet(yes + no ~ X1A + X1C + X1G + X1T + X19A + X19C + X19G + X19T + X20A + X20C + X20G + X20T + X21A + X21C + X21G + X21T + X22A + X22C + X22G + X22T + X23A + X23C + X23G + X23T + X24A + X24C + X24G + X24T + X25A + X25C + X25G + X25T + X26A + X26C + X26G + X26T + X27A + X27C + X27G + X27T + X28A + X28C + X28G + X28T + X29A + X29C + X29G + X29T + X30A + X30C + X30G + X30T + X31A + X31C + X31G + X31T + X32A + X32C + X32G + X32T + X33A + X33C + X33G + X33T, trainset, hidden=c(3))
-      comp <- compute(nn, testset[-5]) # this is how you make prediction with testset
-      pred.weights <- comp$net.result
-      idx <- apply(pred.weights, 1, which.max)
-      prednn <- c('yes', 'no')[idx] # the resulting prediction
-
-      output$result<-renderTable({
-        table(prednn, testset$class)  })
-      output$summary <- renderPrint(summary(nn$net.result))
-      output$plot <- renderPlot({
-        plot(nn)
-      })
-    })
-    
     
     # svm action button
     observeEvent(input$svm, {
