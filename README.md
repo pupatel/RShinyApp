@@ -1,4 +1,4 @@
-An exmaple RShiny App integrating decision tree, random forest, and support vector machine algorithms.
+RShiny App integrating decision tree, random forest, and support vector machine algorithms.
 ---
 
 version: v1  
