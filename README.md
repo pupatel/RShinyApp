@@ -1,4 +1,4 @@
-An exmaple RShiny App integrating 3 of well known Machine Learning algorithms.
+An exmaple RShiny App integrating decision tree, random forest, and support vector machine algorithms.
 ---
 
 version: v1  
