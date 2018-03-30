@@ -78,6 +78,7 @@ server<- function(input,output, session){
     trainset = data[ind==1,]
     testset = data[ind==2,]   
     
+    
      # Decision Tree action button
     observeEvent(input$rpart, {
       ml_rpart<-rpart(trainset$class~.,method='class',data=trainset,control=rpart.control(minsplit=10,cp=0))
@@ -95,8 +96,6 @@ server<- function(input,output, session){
     })
     
     
-    
-
     #Random forest action button
     observeEvent(input$rf, {
       require(randomForest)
@@ -110,9 +109,8 @@ server<- function(input,output, session){
         varImpPlot(rf.fit, main="Random Forest model fit, importance of the parameters")
         importance(rf.fit)
       })
-    })
+    }) 
     
-
     
     # SVM action button
     observeEvent(input$svm, {
