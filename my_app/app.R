@@ -1,19 +1,25 @@
-library(shiny)
-source("datarep.R")
+#Created by Parth Patel, DBI @ University of Delaware, Newark, Delaware 19717
+#Date created: 03/29/2018
+
+##This script builds and runs RShiny app using example feature file and machine learning algorithms.
+
+
+library(shiny) # hiny library
+
+source("datarep.R") #Uploading data file ("Features.csv") using another R script.
 
 ui<-fluidPage(
-  #  input  : stuff you allow the users to interact with:actionButton, numericInput
+  #  input  : Inputs for the users to interact with:actionButton, numericInput
 )
 
 server<-function(input, output){
-  # fetch the input from ui and respond with some output: renderPlot, renderPrint...etc
+  # Gather the input from ui and respond with some output: renderPlot, renderPrint...etc
 }
-# call shinyApp and launch it
+# Call shinyApp and launch it
 shinyApp(ui=ui, server=server)
-#Step 3 : try-and-error to build the app, insert your first model 
 
-library(shiny) # shiny library
-# begining of ui component ?
+
+# Beginning of ui component
 ui<-shinyUI(fluidPage(
   
   fluidRow(
@@ -23,7 +29,7 @@ ui<-shinyUI(fluidPage(
            sidebarLayout(
              sidebarPanel(
                h3('choose the model'),
-               # the actioButton called rpart which is the name of the variable you need to use in the server component
+               # The actioButtons called rpart,rf,svm which is the names of the variables used in the server component
                
                actionButton('rpart', label = 'Decision Tree',icon("leaf",lib="glyphicon"), 
                             style="color: #fff; background-color: #339933; border-color: #2e6da4"),
@@ -34,10 +40,10 @@ ui<-shinyUI(fluidPage(
                actionButton('svm', label = 'SupportVectorMachine', icon("random", lib="glyphicon"),
                             style="color: #fff; background-color: #ffa500; border-color: #2e6da4"),
                
-               # the training sample split you allow the user to control on your model
+               # The training sample split  allow the user to control on your model. Default is set to 50%.
                numericInput("ratio", "training sample in %", value=50/100, min = 50/100, max = 90/100, step=0.1)
              ),
-             # this is how you create many "tabs" in the finishing 
+             # Create  "tabs" on the right side output panel. 
              mainPanel(
                
                tabsetPanel( 
@@ -50,34 +56,29 @@ ui<-shinyUI(fluidPage(
            )))
 ))
 
-# remember to inmport all the libraries you need for your machine learning models and plots
-library(rpart)				        # Popular decision tree algorithm
+# Import all the required libraries for machine learning models and plots
+library(rpart)				  # Popular decision tree algorithm
 library(rattle)					# Fancy tree plot
-library(rpart.plot)				# Enhanced tree plots
-library(RColorBrewer)				# Color selection for fancy tree plot
+library(rpart.plot)			# Enhanced tree plots
+library(RColorBrewer)		# Color selection for fancy tree plot
 library(party)					# Alternative decision tree algorithm
 library(partykit)				# Convert rpart object to BinaryTree
-library(tree) # good to have but not necessary
-library(neuralnet) # you will need this to do neural network
-library(xtable) # good to have
-library(e1071) # your suppose vector machine model
-library(randomForest) # your randomforest model?
-
-#data(iris) # you call the famous machine learning data iris like this
-#attach(iris) i usually do this to cache my dataset?
+library(tree) 
+library(xtable)
+library(e1071) # suppose vector machine model
+library(randomForest) #randomforest model
 
 
-# begining of your server component
+# Beginning of server component
 server<- function(input,output, session){
   set.seed(1234)
   observe({
     r<-as.numeric(input$ratio)
     ind <- sample(2, nrow(data), replace = TRUE, prob=c(r,1-r))
     trainset = data[ind==1,]
-    testset = data[ind==2,]
+    testset = data[ind==2,]   
     
-    
-    
+     # Decision Tree action button
     observeEvent(input$rpart, {
       ml_rpart<-rpart(trainset$class~.,method='class',data=trainset,control=rpart.control(minsplit=10,cp=0))
       model_pred<-predict(ml_rpart, testset, type="class")
@@ -96,7 +97,7 @@ server<- function(input,output, session){
     
     
 
-    #random forest action button
+    #Random forest action button
     observeEvent(input$rf, {
       require(randomForest)
       rf.fit<-with(trainset, randomForest(class~., data=trainset, importance=TRUE, ntree=400))
@@ -113,7 +114,7 @@ server<- function(input,output, session){
     
 
     
-    # svm action button
+    # SVM action button
     observeEvent(input$svm, {
       require(e1071)
       attach(data)
@@ -131,13 +132,14 @@ server<- function(input,output, session){
     })
     
     
-    #print dataframe's sample head
+    #Print dataframe's sample head (5 rows)
     output$head <- renderPrint({
       head(testset, 5)
     })
   })
 }
 
+#Lauch shinyApp
 shinyApp(ui=ui, server=server)
 
-# free server shinyapps.io
+# End of Script #
